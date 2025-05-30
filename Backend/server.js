@@ -4,11 +4,10 @@ const cors = require('cors');
 require('dotenv').config();
 const app = require('./src/app');
 
-
 const port = process.env.PORT || 3000;
 
 const corsOptions = {
-    origin : process.env.FRONTEND_URL,
+    origin: process.env.FRONTEND_URL || '*',
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
 };
@@ -22,10 +21,14 @@ if (process.env.NODE_ENV === 'production') {
     });
 }
 
-app.get("/", (req, res)=>{
-    res.send("Welcome to the Api");
+app.get("/", (req, res) => {
+    res.send("Welcome to the API");
 });
 
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
-});
+if (process.env.VERCEL !== "1") {
+    app.listen(port, () => {
+        console.log(`Server running on http://localhost:${port}`);
+    });
+}
+
+module.exports = app;
